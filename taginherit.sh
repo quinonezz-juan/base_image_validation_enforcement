@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Catch the required parameters
-while getopts 'B:T:R:' OPTION; do
+while getopts 'B:T:R:P:' OPTION; do
  case "$OPTION" in
   B)
    baseimageName="$OPTARG"
@@ -16,6 +16,11 @@ while getopts 'B:T:R:' OPTION; do
   R)
    output_image_name="$OPTARG"
    echo $output_image_name
+   ;;
+
+   P)
+   file_path="$OPTARG"
+   echo $file_path
    ;;
 
   ?)
@@ -41,7 +46,8 @@ do
 	base_image_name=$(echo ${base_image_tags[0]} | cut -d ':' -f1)
 	echo $base_image_name
 	# Build the new image
-	docker build --build-arg IMAGE_NAME=$base_image_name --build-arg IMAGE_TAG=$baseimageTag -t $output_image_name -f Dockerfile .
+    echo ${file_path}/Dockerfile
+	docker build --build-arg IMAGE_NAME=$base_image_name --build-arg IMAGE_TAG=$baseimageTag -t $output_image_name -f Dockerfile ${file_path}
 
 	# Assing taf to the image
 	for tag in $base_image_tags
